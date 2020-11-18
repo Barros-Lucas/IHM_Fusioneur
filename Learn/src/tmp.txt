@@ -1,0 +1,37 @@
+try {
+			bus.start("localhost:2010");
+			bus.bindMsg("", new IvyMessageListener() {
+
+				@Override
+				public void receive(IvyClient client, String[] args) {
+					System.out.println(client);
+					
+				}
+				
+			});
+			
+			bus.bindMsg("Palette:MousePressed x=(.*) y=(.*)", new IvyMessageListener() {
+
+				@Override
+				public void receive(IvyClient client, String[] args) {
+					
+					System.out.println("Clic aux coordonnées x:"+args[0]+" y:"+args[1]);
+					int longueur = 50;
+					int hauteur = 25;
+					int x = Integer.parseInt(args[0])-(longueur/2);
+					int y = Integer.parseInt(args[1])-(hauteur/2);
+					
+					try {
+						bus.sendMsg("Palette:CreerRectangle x="+x+" y="+y+" longueur="+longueur+" hauteur="+hauteur);
+					} catch (IvyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+				
+			});
+			
+		} catch (IvyException ie){
+			System.out.println("can't send my message on the bus");
+		}
