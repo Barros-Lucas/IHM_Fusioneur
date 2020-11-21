@@ -1,11 +1,11 @@
+import java.awt.Color;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map.Entry;
+
 
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyApplicationListener;
@@ -56,18 +56,131 @@ public class Voice {
 			bus.start("localhost:2010");
 
 			
-
+			bus.bindMsg("sra5 Text=(.*) Confidence=(.*)", new IvyMessageListener() {
 			
+					@Override
+					public void receive(IvyClient client, String[] args) {
+
+						String texte = args[0];
+						int confidence = Math.round((Float.parseFloat(args[1].replace(",", "."))*100));
+						
+						int confidenceMin = 60;
+						
+						if(confidence>=confidenceMin && !texte.contains(".")) {
+							//ok
+							
+							String wordFamily = getFamilyWord(texte);
+							String cleanWord = getCleanWord(texte);
+							System.out.println("Voice ok : "+wordFamily+"/"+cleanWord);
+							//send request to fusion
+							try {
+								bus.sendMsg("Voice_:"+wordFamily+":"+cleanWord);
+							} catch (IvyException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							
+						}else {
+							//porly recognized
+							System.out.println("Error: word porly recognized ");
+						}
+						
+					}
+				});
 			
 		} catch (IvyException ie){
 			System.out.println("can't send my message on the bus");
 		}
 	}
+		
+	//return the family name of the word input as String. Data from grammar.grxml
+	private String getFamilyWord(String texte) {
+		String family = "";
+		
+		//Family from grammar.grxml
+		switch(texte){
+		
+		//Position Family
+		case "ici":
+			family = "Pos";
+			break;
+		case "la":
+			family = "Pos";
+			break;
+		case "a cette position":
+			family = "Pos";
+			break;
+			
+		//Color Family
+		case "blanc":
+			family = "Color";
+			break;
+		case "noir":
+			family = "Color";
+			break;
+		case "rouge":
+			family = "Color";
+			break;
+		case "vert":
+			family = "Color";
+			break;
+		case "bleu":
+			family = "Color";
+			break;
+		default:
+			break;
 	
+		}
+		return family;
+	}
+	
+	private String getCleanWord(String texte) {
+		String cleanWord = "";
+		
+		//Family from grammar.grxml
+		switch(texte){
+		
+		//Position Family
+		case "ici":
+			cleanWord = "ici";
+			break;
+		case "la":
+			cleanWord = "ici";
+			break;
+		case "a cette position":
+			cleanWord = "ici";
+			break;
+			
+		//Color Family
+		case "blanc":
+			cleanWord = Color.WHITE.toString();
+			break;
+		case "noir":
+			cleanWord = Color.BLACK.toString();
+			break;
+		case "rouge":
+			cleanWord = Color.RED.toString();
+			break;
+		case "vert":
+			cleanWord = Color.GREEN.toString();
+			break;
+		case "bleu":
+			cleanWord = Color.BLUE.toString();
+			break;
+		default:
+			break;
+	
+		}
+			
+		return cleanWord;
+	}
 
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public static void main(String[] args) throws IvyException {
+
+
+		new Voice();
 
 	}
 

@@ -199,16 +199,16 @@ public class Geste {
 		try {
 			switch(objectName) {
 			case "Rectangle":
-				bus.sendMsg("Creer_:"+objectName);
+				bus.sendMsg("Geste_:Creer_:"+objectName);
 				break;
 			case "Ellipse":
-				bus.sendMsg("Creer_:"+objectName);
+				bus.sendMsg("Geste_:Creer_:"+objectName);
 				break;
 			case "Deplacer":
-				bus.sendMsg("Deplacer");
+				bus.sendMsg("Geste_:Deplacer");
 				break;
 			case "Supprimer":
-				bus.sendMsg("Supprimer");
+				bus.sendMsg("Geste_:Supprimer");
 				break;
 			default:
 				break;

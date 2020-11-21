@@ -64,16 +64,24 @@ public class IvyFusion {
 		try {
 			bus.start("localhost:2010");
 
+			bus.bindMsg("Palette:MouseClicked x=(.*) y=(.*)", new IvyMessageListener() {
+
+				@Override
+				public void receive(IvyClient client, String[] args) {
+					System.out.println("CLick ");
+				}
+				
+			});
 			
-			
-			bus.bindMsg("Creer_:(.*)", new IvyMessageListener() {
+			bus.bindMsg("Geste_:Creer_:(.*)", new IvyMessageListener() {
 
 				@Override
 				public void receive(IvyClient client, String[] args) {	
-					System.out.println(cmd.toString());
-					System.out.println(args[0]);
-//					int longueur = 50;
-//					int hauteur = 25;
+
+					String objectName = args[0];
+					
+					int longueur = 50;
+					int hauteur = 25;
 //					int x = 50;
 //					int y = 50;
 //					
@@ -82,7 +90,7 @@ public class IvyFusion {
 				
 			});
 			
-			bus.bindMsg("Deplacer", new IvyMessageListener() {
+			bus.bindMsg("Geste_:Deplacer", new IvyMessageListener() {
 
 				@Override
 				public void receive(IvyClient client, String[] args) {	
@@ -91,7 +99,7 @@ public class IvyFusion {
 				
 			});
 			
-			bus.bindMsg("Supprimer", new IvyMessageListener() {
+			bus.bindMsg("Geste_:Supprimer", new IvyMessageListener() {
 
 				@Override
 				public void receive(IvyClient client, String[] args) {	
@@ -100,6 +108,18 @@ public class IvyFusion {
 				
 			});
 			
+			bus.bindMsg("Voice_:(.*):(.*)", new IvyMessageListener() {
+
+				@Override
+				public void receive(IvyClient client, String[] args) {	
+					System.out.println("voice!");
+					System.out.println(args.length);
+					System.out.println(args[0]);
+					System.out.println(args[1]);
+
+				}
+				
+			});
 
 			
 		} catch (IvyException ie){
