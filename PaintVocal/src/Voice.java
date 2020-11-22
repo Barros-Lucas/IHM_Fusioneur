@@ -128,6 +128,19 @@ public class Voice {
 		case "bleu":
 			family = "Color";
 			break;
+
+			
+		//Color picker Family
+		case "de cette couleur":
+			family = "ColorPicker";
+			break;
+			
+		//execute Family
+		case "envoie":
+			family = "Execute";
+			break;
+			
+			
 		default:
 			break;
 	
@@ -154,19 +167,19 @@ public class Voice {
 			
 		//Color Family
 		case "blanc":
-			cleanWord = Color.WHITE.toString();
+			cleanWord = "WHITE";
 			break;
 		case "noir":
-			cleanWord = Color.BLACK.toString();
+			cleanWord = "BLACK";
 			break;
 		case "rouge":
-			cleanWord = Color.RED.toString();
+			cleanWord = "RED";
 			break;
 		case "vert":
-			cleanWord = Color.GREEN.toString();
+			cleanWord = "GREEN";
 			break;
 		case "bleu":
-			cleanWord = Color.BLUE.toString();
+			cleanWord = "BLUE";
 			break;
 		default:
 			break;

@@ -1,69 +1,74 @@
 
 public class Commande {
 
-	private String action;
-	private String object;
-	private double x,y;
+	private String name;
+	private String forme;
+	private int pos[] = new int[2];
 	private String color;
-	
-	private int tmpParole;
-	private double tmpX,tmpY;
+	private boolean cmdOk;
 	
 	
-	public Commande(String action, String object, double x, double y, String color, int tmpParole, double tmpX, double tmpY) {
-		this.action = action;
-		this.object = object;
-		this.x = x;
-		this.y = y;
+	public Commande(String name, String forme, int[] pos, String color, boolean cmdOk) {
+		this.name = name;
+		this.forme = forme;
+		this.pos = pos;
 		this.color = color;
-		this.tmpParole = tmpParole;
-		this.tmpX = tmpX;
-		this.tmpY = tmpY;
+		this.cmdOk = cmdOk;
 	}
-
+	
 	public Commande() {
-		this.action = "";
-		this.object = "";
-		this.x = 0;
-		this.y = 0;
+		this.name = "";
+		this.forme = "";
+		this.pos[0] = -1;
+		this.pos[1] = -1;
 		this.color = "";
-		this.tmpParole = 500;
-		this.tmpX = 0;
-		this.tmpY = 0;
+		this.cmdOk = false;
 	}
 	
+	public void resetCommande() {
+		this.name = "";
+		this.forme = "";
+		this.pos[0] = -1;
+		this.pos[1] = -1;
+		this.color = "";
+		this.cmdOk = false;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getForme() {
+		return forme;
+	}
+
+	public void setForme(String forme) {
+		this.forme = forme;
+	}
+
+	public int[] getPos() {
+		return pos;
+	}
 	
-
-	public String getAction() {
-		return action;
+	public int getPosX() {
+		return pos[0];
+	}
+	
+	public int getPosY() {
+		return pos[1];
+	}
+	
+	public void setPos(int[] pos) {
+		this.pos = pos;
 	}
 
-	public void setAction(String action) {
-		this.action = action;
-	}
-
-	public String getObject() {
-		return object;
-	}
-
-	public void setObject(String object) {
-		this.object = object;
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
+	public void setPos(int x, int y) {
+		this.pos[0] = x;
+		this.pos[1] = y;
 	}
 
 	public String getColor() {
@@ -74,29 +79,34 @@ public class Commande {
 		this.color = color;
 	}
 
-	public double getTmpX() {
-		return tmpX;
+	public boolean isCmdOk() {
+		return cmdOk;
 	}
 
-	public void setTmpX(double tmpX) {
-		this.tmpX = tmpX;
+	public void setCmdOk(boolean cmdOk) {
+		this.cmdOk = cmdOk;
 	}
+	
 
-	public double getTmpY() {
-		return tmpY;
-	}
-
-	public void setTmpY(double tmpY) {
-		this.tmpY = tmpY;
-	}
-
-	public int getTmpParole() {
-		return tmpParole;
-	}
-
-	@Override
-	public String toString() {
-		return action + "_" + object + "" + x + "," + y + "_" + color;
+	public String getCommandeFormat() {
+		String cmdString = "Palette:";
+		switch(this.getName()) {
+		case "Creer":
+			cmdString+="Creer"+this.getForme();
+			if(this.getPosX() != -1 && this.getPosY() != -1) {
+				cmdString +=" x="+this.getPos()[0] + " y="+this.getPos()[1];
+			}
+			
+			if(!this.getColor().equals("")) {
+				cmdString+=" couleurFond="+this.getColor();
+			}
+			break;
+			
+		default:
+			break;
+		}
+		
+	return cmdString;
 	}
 	
 	
