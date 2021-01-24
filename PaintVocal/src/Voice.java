@@ -135,8 +135,19 @@ public class Voice {
 			family = "ColorPicker";
 			break;
 			
+		//Object type Voice
+		case "cet objet":
+			family = "FormeObject";
+			break;
+		case "ce rectangle":
+			family = "FormeObject";
+			break;
+		case "cette ellipse":
+			family = "FormeObject";
+			break;
+			
 		//execute Family
-		case "envoie":
+		case "envoiyer":
 			family = "Execute";
 			break;
 			
@@ -180,6 +191,17 @@ public class Voice {
 			break;
 		case "bleu":
 			cleanWord = "BLUE";
+			break;
+			
+		//FormeObject Family
+		case "cet object":
+			cleanWord = "Objet";
+			break;
+		case "ce rectangle":
+			cleanWord = "Rectangle";
+			break;
+		case "cette ellipse":
+			cleanWord = "Ellipse";
 			break;
 		default:
 			break;

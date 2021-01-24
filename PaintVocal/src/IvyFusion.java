@@ -27,6 +27,11 @@ public class IvyFusion {
 	
 	private String figureName;
 	
+	//boolean check if object is already picked for deplacer cmd
+	private boolean deplacerObjPick;
+	//boolean check if Pos is already picked for deplacer cmd
+	private boolean deplacerPos;
+	
 
 	HashMap<Stroke, String> strokes = new HashMap<Stroke, String>();
 	
@@ -75,37 +80,46 @@ public class IvyFusion {
 
 				@Override
 				public void receive(IvyClient client, String[] args) {
-					System.out.println("CLick ");
 					
 					switch(state) {
 					case 1:
+						System.out.println("Click triggered");
 						state = 3;
 						posTemp[0] = Integer.parseInt(args[0]);
 						posTemp[1] = Integer.parseInt(args[1]);
 						cmd.setCmdOk(false);
 						break;
 					case 2:
+						System.out.println("Click triggered");
 						state = 1;
 						cmd.setPos(Integer.parseInt(args[0]),Integer.parseInt(args[1]));
 						cmd.setCmdOk(true);
 						break;
 					case 3:
+						System.out.println("Click triggered");
 						state = 3;
 						posTemp[0] = Integer.parseInt(args[0]);
 						posTemp[1] = Integer.parseInt(args[1]);
 						cmd.setCmdOk(false);
 						break;
-					
-					//mode ClickColorPicker
 					case 9:
-						String cmdString = "Palette:CreerRectangle couleurFond=GREEN ";
-						try {
-							bus.sendMsg(cmdString);
-						} catch (IvyException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						System.out.println("Click triggered");
+						state = 10;
+						cmd.setPos(Integer.parseInt(args[0]),Integer.parseInt(args[1]));
+						deplacerPos = true;
+						if(deplacerObjPick) {
+							cmd.setCmdOk(true);
+						}else {
+							cmd.setCmdOk(false);
 						}
 						break;
+					case 10:
+						System.out.println("Click triggered");
+						//just update pos, unique update to do
+						state = 10;
+						cmd.setPos(Integer.parseInt(args[0]),Integer.parseInt(args[1]));
+						break;
+					
 					default:
 						break;
 				}
@@ -123,10 +137,28 @@ public class IvyFusion {
 				
 					switch(state) {
 					case 1:
+						System.out.println("Mouse on figure triggered");
 						state = 4;
 						figureName = args[0];
 						cmd.setCmdOk(true);
 						break;
+					case 5:
+						System.out.println("Mouse on figure triggered");
+						state = 6;
+						figureName = args[0];
+						cmd.setCmdOk(false);
+						break;
+					case 10:
+						System.out.println("Mouse on figure triggered");
+						state = 6;
+						figureName = args[0];
+						cmd.setCmdOk(false);
+						break;
+					case 11:
+						System.out.println("Mouse on figure triggered");
+						state = 12;
+						figureName = args[0];
+						cmd.setCmdOk(false);
 					default:
 						break;
 					}
@@ -142,9 +174,17 @@ public class IvyFusion {
 				
 					switch(state) {
 					case 4:
+						System.out.println("Mouse out figure triggered");
 						state = 1;
 						cmd.setCmdOk(true);
 						break;
+					case 6:
+						System.out.println("Mouse out figure triggered");
+						state = 5;
+						cmd.setCmdOk(false);
+					case 12:
+						System.out.println("Mouse out figure triggered");
+						state = 11;
 					default:
 						break;
 					}
@@ -163,7 +203,7 @@ public class IvyFusion {
 					
 					switch(state) {
 						case 0:
-							System.out.println("creer");
+							System.out.println("Creer");
 							state = 1;
 							cmd.setName("Creer");
 							cmd.setForme(args[0]);
@@ -181,7 +221,19 @@ public class IvyFusion {
 
 				@Override
 				public void receive(IvyClient client, String[] args) {	
-					System.out.println("deplace");
+					switch(state) {
+					case 0:
+						System.out.println("Deplacer");
+						state = 5;
+						cmd.setName("Deplacer");
+						deplacerObjPick = false;
+						deplacerPos = false;
+						cmd.setCmdOk(false);
+						
+						break;
+					default:
+						break;
+					}
 				}
 				
 			});
@@ -190,7 +242,14 @@ public class IvyFusion {
 
 				@Override
 				public void receive(IvyClient client, String[] args) {	
-					System.out.println("supp");
+					switch(state) {	
+					case 0:
+						System.out.println("Supprimer");
+						state = 11;
+						cmd.setName("Supprimer");
+						cmd.setCmdOk(false);
+
+					}
 				}
 				
 			});
@@ -199,7 +258,6 @@ public class IvyFusion {
 
 				@Override
 				public void receive(IvyClient client, String[] args) {
-					System.out.println("voice!");
 					
 					switch(args[0]) {
 					case "Pos":
@@ -207,17 +265,35 @@ public class IvyFusion {
 						//content of Event ParolePos
 						switch(state) {
 						case 1:
+							System.out.println("Position Voice receive");
 							state = 2;
 							cmd.setCmdOk(false);
 							break;
 						case 2:
+							System.out.println("Position Voice receive");
 							state = 2;
 							cmd.setCmdOk(false);
 							break;
 						case 3:
+							System.out.println("Position Voice receive");
 							state = 1;
 							cmd.setPos(posTemp);
 							cmd.setCmdOk(true);
+						case 5:
+							System.out.println("Position Voice receive");
+							state = 9;
+							cmd.setCmdOk(false);
+							break;
+						case 8:
+							System.out.println("Position Voice receive");
+							state = 9;
+							cmd.setCmdOk(false);
+							break;
+						case 9:
+							System.out.println("Position Voice receive");
+							state = 9;
+							cmd.setCmdOk(false);
+							break;
 						default:
 							break;
 						}
@@ -229,8 +305,10 @@ public class IvyFusion {
 						//content of Event ParoleCouleurSimple
 						switch(state) {
 						case 1:
+							System.out.println("Color Voice receive");
 							state = 1;
 							cmd.setColor(args[1]);
+							System.out.println(cmd.getColor());
 							cmd.setCmdOk(true);
 							break;
 						default:
@@ -242,7 +320,7 @@ public class IvyFusion {
 					case "ColorPicker":
 						switch(state) {
 						case 4:
-							System.out.println(figureName);
+							System.out.println("ColorPicker Voice receive");
 							synchronized (cmd) {
 							try {
 								
@@ -270,14 +348,14 @@ public class IvyFusion {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							System.out.println("wait");
+							System.out.println("Wait for getting information ColorPicker");
 							try {
 								cmd.wait();
 							} catch (InterruptedException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							System.out.println("wait2");
+							System.out.println("Wait for getting information ColorPicker");
 							state = 1;
 							cmd.setCmdOk(true);
 							
@@ -287,10 +365,82 @@ public class IvyFusion {
 							break;
 						}
 						break;
-					case "Execute":
 						
+					case "FormeObject":
+						String forme = "";
+						boolean formeOk = false;
+
+						//content of Event Voice Forme object
+						switch(state) {
+						case 6:
+							System.out.println("Forme Object Voice receive");
+							//test object right object forme between selected and voice
+							forme = args[1];
+							
+							formeOk = false;
+							System.out.println(figureName);
+							System.out.println(forme);
+							System.out.println(figureName.contains("R"));
+							System.out.println((forme.contains("R") || forme.contains("Object")));
+							//actually have just 2 types,Rectangle and Ellipse
+							if(figureName.contains("R") && (forme.contains("R") || forme.contains("Object"))) {
+								formeOk = true;
+							}
+							if(figureName.contains("E")&& (forme.contains("E") || forme.contains("object"))) {
+								formeOk = true;
+							}
+							
+							if(formeOk) {
+								state = 8;
+								deplacerObjPick = true;
+								cmd.setFigureName(figureName);
+								if(deplacerPos) {
+									cmd.setCmdOk(true);
+								}else {
+									cmd.setCmdOk(false);
+								}
+								System.out.println("Forme recognized and corresponding");
+							}else {
+								System.out.println("ERROR: object did not correspond with your voice signal");
+								System.out.println("Deplacer canceled");
+								state = 0;
+								cmd.resetCommande();
+								deplacerObjPick = false;
+							}
+
+							break;
+						case 12:
+							forme = args[1];
+							formeOk = false;
+							System.out.println(figureName);
+							if(figureName.contains("R") && (forme.contains("R") || forme.contains("Object"))) {
+								formeOk = true;
+							}
+							if(figureName.contains("E")&& (forme.contains("E") || forme.contains("object"))) {
+								formeOk = true;
+							}
+							if(formeOk) {
+								state = 13;
+								cmd.setCmdOk(true);
+								cmd.setFigureName(figureName);
+								System.out.println("Forme recognized and corresponding");
+							}else {
+								state = 0;
+								cmd.setCmdOk(false);
+								cmd.resetCommande();
+								System.out.println("ERROR: suppression canceled, object type not conforme with voice");
+							}
+
+						default:
+							break;
+						}
+						
+						break;
+					case "Execute":
+						System.out.println("Envoie receive");
 						//content of Event ParoleCouleurChoix
 						if(cmd.isCmdOk()) {
+							System.out.println("Commande is ok");
 							state = 0;
 							String cmdString = cmd.getCommandeFormat();
 							
@@ -298,12 +448,15 @@ public class IvyFusion {
 								System.out.println(cmdString);
 								bus.sendMsg(cmdString);
 								cmd.resetCommande();
+								System.out.println("Commande send");
 							} catch (IvyException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}else {
+							cmd.resetCommande();
 							System.out.println("cmd not valide");
+							state = 0;
 						}
 						
 						break;
@@ -325,89 +478,6 @@ public class IvyFusion {
 		}
 	}
 	
-	
-//	public String getNameObjetClicked(String x, String y) {
-//		ArrayList<String> names = new ArrayList<String>();
-//		boolean[] getAllPoints = {false};
-//		ObjetPicked objPick = new ObjetPicked();
-//		try {
-//			
-//			
-//			bus.sendMsg("Palette:TesterPoint x="+x+" y="+y);
-//			bus.bindMsg("Palette:ResultatTesterPoint x=(.*) y=(.*) nom=(.*)", new IvyMessageListener() {
-//
-//				@Override
-//				public void receive(IvyClient client, String[] args) {
-//					
-//					names.add(args[2]);
-//
-//				}
-//				
-//			});
-//			
-//			bus.bindMsg("Palette:FinTesterPoint x=(.*) y=(.*)", new IvyMessageListener() {
-//
-//				@Override
-//				public void receive(IvyClient client, String[] args) {
-//					
-//					//une fois fini on get sa couleur
-//					if
-//					try {
-//						bus.sendMsg("Palette:DemanderInfo nom="+names.get(names.size()-1));
-//						bus.bindMsg("Palette:Info nom=(.*) x=(.*) y=(.*) longueur=(.*) hauteur=(.*) couleurFond=(.*) couleurContour=(.*)", new IvyMessageListener() {
-//
-//							@Override
-//							public void receive(IvyClient client, String[] args) {
-//								objPick.setCouleurFond(args[5]);
-//								System.out.println(args[5]);
-//								getAllPoints[0] = true;
-//							}
-//						});
-//					} catch (IvyException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//
-//
-//				}
-//				
-//			});			
-//		} catch (IvyException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//
-//		if(names.isEmpty()) {
-//			return "";
-//		}else {
-//			return names.get(0);
-//
-//		}
-//		
-//	}
-//	
-//
-//	public String getColorOnClick(String x,String y) {
-//		
-//		
-//		String nameObjectPick = getNameObjetClicked(x,y);
-//		System.out.println(nameObjectPick);
-//
-//		
-////		String nameObjectPick = getNameObjetClicked(x,y);
-////		System.out.println("nameOut :"+nameObjectPick);
-////		if(nameObjectPick.equals("")) {
-////			return "";
-////		}else {
-////			ObjetPicked objPick = getInfoObjectPicked(nameObjectPick);
-////			return objPick.getCouleurFond();
-////
-////		}
-//
-//		return "";
-//		
-//	}
 	
 	public static void main(String args[]) throws IvyException {
 

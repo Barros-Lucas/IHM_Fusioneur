@@ -1,4 +1,8 @@
 
+/**
+ * @author Etu
+ *
+ */
 public class Commande {
 
 	private String name;
@@ -6,14 +10,16 @@ public class Commande {
 	private int pos[] = new int[2];
 	private String color;
 	private boolean cmdOk;
+	private String figureName;
 	
 	
-	public Commande(String name, String forme, int[] pos, String color, boolean cmdOk) {
+	public Commande(String name, String forme, int[] pos, String color, boolean cmdOk, String figureName) {
 		this.name = name;
 		this.forme = forme;
 		this.pos = pos;
 		this.color = color;
 		this.cmdOk = cmdOk;
+		this.figureName = figureName;
 	}
 	
 	public Commande() {
@@ -23,6 +29,7 @@ public class Commande {
 		this.pos[1] = -1;
 		this.color = "";
 		this.cmdOk = false;
+		this.figureName = "";
 	}
 	
 	public void resetCommande() {
@@ -32,6 +39,7 @@ public class Commande {
 		this.pos[1] = -1;
 		this.color = "";
 		this.cmdOk = false;
+		this.figureName = "";
 	}
 
 	public String getName() {
@@ -87,6 +95,16 @@ public class Commande {
 		this.cmdOk = cmdOk;
 	}
 	
+	
+	
+
+	public String getFigureName() {
+		return figureName;
+	}
+
+	public void setFigureName(String figureName) {
+		this.figureName = figureName;
+	}
 
 	public String getCommandeFormat() {
 		String cmdString = "Palette:";
@@ -102,6 +120,12 @@ public class Commande {
 			}
 			break;
 			
+		case "Deplacer":
+			cmdString+="DeplacerObjetAbsolu nom=" + this.figureName + " x=" + this.getPos()[0] + " y=" + this.getPos()[1];
+			break;
+		case "Supprimer":
+			cmdString+="SupprimerObjet nom=" + this.figureName;
+			break;
 		default:
 			break;
 		}
