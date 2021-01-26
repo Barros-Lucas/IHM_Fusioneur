@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
+
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyApplicationListener;
 import fr.dgac.ivy.IvyMessageListener;
@@ -14,8 +15,12 @@ import fr.dgac.ivy.IvyException;
 import java.util.HashMap; 
 
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class IvyFusion {
+	
+    Timer timer = new Timer(true);
 
 	private Ivy bus;
 	
@@ -37,12 +42,38 @@ public class IvyFusion {
 	
 	int i,j;
 	
+	public void SendCmd(Commande cmd) {
+		System.out.println("Envoie receive | "+cmd.getName());
+		//content of Event ParoleCouleurChoix
+		if(cmd.isCmdOk()) {
+			System.out.println("Commande is ok");
+			state = 0;
+			String cmdString = cmd.getCommandeFormat();
+			
+			try {
+				System.out.println(cmdString);
+				bus.sendMsg(cmdString);
+				cmd.resetCommande();
+				System.out.println("Commande send");
+			} catch (IvyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			cmd.resetCommande();
+			System.out.println("cmd not valide");
+			state = 0;
+		}
+	}
+	
 	public IvyFusion() throws IvyException {
 		this.state = 0;
 		
 		figureName = "";
 		
 		this.cmd = new Commande();
+		
+		
 		
 		// initialization, name and ready message
 		bus = new Ivy("IvyFusion","Fusion_Ready", new IvyApplicationListener() {
@@ -204,6 +235,14 @@ public class IvyFusion {
 					switch(state) {
 						case 0:
 							System.out.println("Creer");
+							timer.schedule(new TimerTask() {
+								@Override
+								public void run() {
+									SendCmd(cmd);
+
+								}
+								
+							}, 5000);
 							state = 1;
 							cmd.setName("Creer");
 							cmd.setForme(args[0]);
@@ -224,6 +263,14 @@ public class IvyFusion {
 					switch(state) {
 					case 0:
 						System.out.println("Deplacer");
+						timer.schedule(new TimerTask() {
+							@Override
+							public void run() {
+								SendCmd(cmd);
+
+							}
+							
+						}, 5000);
 						state = 5;
 						cmd.setName("Deplacer");
 						deplacerObjPick = false;
@@ -245,10 +292,21 @@ public class IvyFusion {
 					switch(state) {	
 					case 0:
 						System.out.println("Supprimer");
+						timer.schedule(new TimerTask() {
+							@Override
+							public void run() {
+								SendCmd(cmd);
+
+							}
+							
+						}, 5000);
+						
 						state = 11;
 						cmd.setName("Supprimer");
 						cmd.setCmdOk(false);
 
+					default:
+						break;
 					}
 				}
 				
@@ -484,7 +542,7 @@ public class IvyFusion {
 		new IvyFusion();  
 		}
 
-	
+
 
 
 }
