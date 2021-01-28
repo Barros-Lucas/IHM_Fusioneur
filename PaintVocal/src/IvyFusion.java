@@ -137,6 +137,7 @@ public class IvyFusion {
 						System.out.println("Click triggered");
 						state = 10;
 						cmd.setPos(Integer.parseInt(args[0]),Integer.parseInt(args[1]));
+						System.out.println(cmd.getPos());
 						deplacerPos = true;
 						if(deplacerObjPick) {
 							cmd.setCmdOk(true);
@@ -149,6 +150,8 @@ public class IvyFusion {
 						//just update pos, unique update to do
 						state = 10;
 						cmd.setPos(Integer.parseInt(args[0]),Integer.parseInt(args[1]));
+						System.out.println(cmd.getPos());
+
 						break;
 					
 					default:
@@ -188,7 +191,8 @@ public class IvyFusion {
 					case 11:
 						System.out.println("Mouse on figure triggered");
 						state = 12;
-						figureName = args[0];
+						cmd.setFigureName(args[0]);
+						System.out.println(cmd.getFigureName()+"/");
 						cmd.setCmdOk(false);
 					default:
 						break;
@@ -242,7 +246,7 @@ public class IvyFusion {
 
 								}
 								
-							}, 5000);
+							}, 10000);
 							state = 1;
 							cmd.setName("Creer");
 							cmd.setForme(args[0]);
@@ -270,7 +274,7 @@ public class IvyFusion {
 
 							}
 							
-						}, 5000);
+						}, 10000);
 						state = 5;
 						cmd.setName("Deplacer");
 						deplacerObjPick = false;
@@ -299,7 +303,7 @@ public class IvyFusion {
 
 							}
 							
-						}, 5000);
+						}, 10000);
 						
 						state = 11;
 						cmd.setName("Supprimer");
@@ -470,17 +474,17 @@ public class IvyFusion {
 						case 12:
 							forme = args[1];
 							formeOk = false;
-							System.out.println(figureName);
-							if(figureName.contains("R") && (forme.contains("R") || forme.contains("Object"))) {
+							System.out.println(forme);
+							System.out.println(cmd.getFigureName().contains("R"));
+							if(cmd.getFigureName().contains("R") && (forme.contains("R") || forme.contains("Object"))) {
 								formeOk = true;
 							}
-							if(figureName.contains("E")&& (forme.contains("E") || forme.contains("object"))) {
+							if(cmd.getFigureName().contains("E")&& (forme.contains("E") || forme.contains("Object"))) {
 								formeOk = true;
 							}
 							if(formeOk) {
 								state = 13;
 								cmd.setCmdOk(true);
-								cmd.setFigureName(figureName);
 								System.out.println("Forme recognized and corresponding");
 							}else {
 								state = 0;
@@ -488,6 +492,7 @@ public class IvyFusion {
 								cmd.resetCommande();
 								System.out.println("ERROR: suppression canceled, object type not conforme with voice");
 							}
+							break;
 
 						default:
 							break;
