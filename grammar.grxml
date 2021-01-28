@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE grammar PUBLIC "-//W3C//DTD GRAMMAR 1.0//EN"
+                "grammar.dtd">
+<!-- the default grammar language is FR  -->
+<grammar  version="1.0"
+          mode ="voice"
+          xmlns="http://www.w3.org/2001/06/grammar"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.w3.org/2001/06/grammar
+                              grammar.xsd"
+          xml:lang="fr-FR" root="answer" tag-format="semantics/1.0">
+
+   <rule id="answer" scope="public">
+    <ruleref special="GARBAGE" />
+    <one-of>
+      <item><ruleref uri="#lieu"/>
+          <tag>out="lieu";</tag></item>
+      <item><ruleref uri="#color"/>
+          <tag>out="color";</tag></item>
+      <item><ruleref uri="#colorPicker"/>
+          <tag>out="colorPicker";</tag></item>
+      <item><ruleref uri="#dessine"/>
+          <tag>out="dessine";</tag></item>
+      <item><ruleref uri="#objectType"/>
+          <tag>out="objectType";</tag></item>
+    </one-of>
+    <ruleref special="GARBAGE" />
+  </rule>
+
+   <rule id="lieu">
+    <one-of>
+      <item>ici</item>
+      <item>la</item>
+      <item>a cette position</item>
+    </one-of>
+  </rule>
+  <rule id="color">
+    <one-of>
+      <item>rouge</item>
+      <item>bleu</item>
+      <item>vert</item>
+      <item>noir</item>
+      <item>blanc</item>
+    </one-of>
+  </rule>
+  <rule id="colorPicker">
+    <one-of>
+      <item>de cette couleur</item>
+    </one-of>
+    </rule>
+  <rule id="dessine">
+    <one-of>
+      <item>envoyer</item>
+    </one-of>
+  </rule>
+  <rule id="objectType">
+    <one-of>
+      <item>cet object</item>
+      <item>ce rectangle</item>
+      <item>cette ellipse</item>
+    </one-of>
+  </rule>
+</grammar>
